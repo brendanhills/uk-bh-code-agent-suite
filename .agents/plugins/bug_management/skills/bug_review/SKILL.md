@@ -12,17 +12,20 @@ When the user runs `/bug_review`:
    - **Targeted (`/bug_review #id`)**: Audits a single specified bug ID.
    - **Full Archive (`/bug_review all`)**: Audits all historical bugs in `.agents/bugs.json`.
 
-2. **Audit & Evidence Gathering Protocol**:
-   - **Codebase & Git Inspection**: Check git commit history (`git log`, `git diff`) for recent updates affecting the bug's context. Inspect whether referenced files, functions, or UI components still exist or have been refactored/removed.
-   - **Targeted Unit Testing**: If targeted reproduction unit tests exist for a candidate bug, execute ONLY those specific tests (avoid full regression test runs) to verify current behavior.
+2. **Audit & Evidence Gathering**:
+   - **Codebase & Git Inspection**: Check git commit history (`git log`, `git diff`) and verify whether referenced files, functions, or UI components still exist or have been refactored/removed.
+   - **Targeted Unit Testing**: If targeted reproduction unit tests exist for a candidate bug, execute ONLY those specific tests to verify current behavior.
 
 3. **Status Assessment**:
    - **Active Bug -> Obsolete**: If architectural or codebase changes removed the affected feature/component or eliminated the root cause, update status to `"Obsolete"`.
    - **Closed Bug -> Reopened**: If recent commits broke a previously fixed bug or if targeted tests fail, update status to `"Reopened"`.
    - **Active Bug -> Fix Verified**: If targeted tests now pass or code changes resolved the issue completely, update status to `"Fix Verified"`.
 
-4. **Database & Record Updates**:
-   - Update `<workspace-root>/.agents/bugs.json` with new status, refresh `"date_triaged"` to current date (`YYYY-MM-DD`), and record rationale in a `"review_notes"` field (with timestamp and review reason).
+4. **MANDATORY DATABASE UPDATES**:
+   - Update `<workspace-root>/.agents/bugs.json`:
+     - Update `"status"` to `"Obsolete"`, `"Reopened"`, or `"Fix Verified"`.
+     - Refresh `"date_triaged"` to current date (`YYYY-MM-DD`).
+     - **REQUIRED FIELD**: Populate `"review_notes"` with date and explanation (e.g. `"review_notes": "YYYY-MM-DD: Audited git log; component removed, marking Obsolete"`).
 
 5. **Summary Reporting**:
    - Render a structured markdown table in the conversation summarizing reviewed bugs, status changes, and review rationale.
