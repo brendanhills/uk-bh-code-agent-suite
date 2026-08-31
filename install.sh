@@ -56,9 +56,9 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [ "$UPDATE_SUBMODULES" = true ]; then
-  echo -e "${BLUE}Updating Git submodules...${NC}"
-  git submodule update --init --recursive --remote
-  echo -e "${GREEN}Submodules updated successfully!${NC}"
+  echo -e "${BLUE}Updating Conductor submodule...${NC}"
+  (cd "${SCRIPT_DIR}" && git submodule update --init --remote conductor)
+  echo -e "${GREEN}Conductor submodule updated successfully!${NC}"
 fi
 
 echo -e "${BLUE}Installing Custom Harness for Antigravity & Jetski...${NC}"
