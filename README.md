@@ -1,15 +1,15 @@
-# Custom Harness for Antigravity & Jetski
+# Code Agent Suite for Jetski & Antigravity
 
-A modular harness for **Antigravity** and **Jetski** that deploys unified agent skills, plugins, lifecycle hooks, prompt heuristics, and global execution rules.
+A unified developer extension, diagnostics, and harness suite for **Jetski** and **Antigravity** that deploys shared agent skills, Conductor, plugins, lifecycle hooks, prompt heuristics, diagnostics, and global execution rules.
 
 ---
 
 ## 🚀 Quick Start (Setup on a New Machine)
 
-To install all plugins, skills, hooks, prompt heuristics, and global rules on any new Cloudtop or developer machine:
+To install all plugins, skills, hooks, prompt heuristics, and global rules on any new Cloudtop, Chromebook, or developer machine:
 
 ```bash
-# Global installation (recommended for all Antigravity & Jetski sessions)
+# Global installation (recommended for all Jetski & Antigravity sessions)
 ./install.sh
 
 # Or install locally scoped to a specific workspace
@@ -18,11 +18,13 @@ To install all plugins, skills, hooks, prompt heuristics, and global rules on an
 
 ### What `./install.sh` Configures
 - **Plugins**: Symlinks `.agents/plugins/` (and Conductor) to `~/.gemini/config/plugins/`.
+- **Conductor**: Full, self-contained Conductor engine and track workflow skills.
 - **Standalone Skills**: Deploys progressive disclosure skills to `~/.gemini/config/skills/`.
 - **Global Rules**: Installs all `.md` rules from `.agents/rules/` into `~/.gemini/config/agents/rules/` and creates discovery symlinks in `~/.gemini/config/rules/`.
 - **Direct File Editing Mandate**: Automatically verifies and appends the native tool editing mandate to `~/.gemini/config/AGENTS.md`.
 - **Hooks & Scripts**: Deploys pre/post invocation hooks and diagnostic scripts into `~/.gemini/config/agents/`.
 - **Prompt Heuristics**: Synchronizes core prompt guidelines and metrics.
+- **Maintenance & Diagnostics**: `maintenance/fix_antigravity.sh` and `update_projects.py` to diagnose hanging language servers and auto-sync GCP project configurations.
 
 ---
 
