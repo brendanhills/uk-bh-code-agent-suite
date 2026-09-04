@@ -138,3 +138,12 @@ The harness enforces a dynamic, extensible ruleset across `.agents/rules/`. Indi
     * Recommends taking a short break.
     * Recommends saving session state via `/checkpoint`.
     * Suggests clearing conversational pollution with `/clear` to start fresh with a concise, anchored prompt.
+
+### 6.2 Shift-Left Security & Fast Quality Gates
+- **Objective**: Prevent late-stage CI/CD and CodeQL security failures (such as CWE-22 path traversal) and slow pull request turnarounds by embedding verification directly into developer-side pre-commit hooks, local AST analysis, and mock-driven test standards.
+- **Architectural Components**:
+  - **Shared Security Primitives (`security_utils.py`)**: Zero-dependency standard library (`pathlib.Path`) containment checks (`safe_join`, `sanitize_slug`, `validate_safe_path`).
+  - **Local Static Analysis Gates**: Turnkey `.pre-commit-config.yaml` template integrating `bandit` (<1s Python AST scan) and `semgrep` (~2s CodeQL/OWASP ruleset).
+  - **Mock-First Test Speed Optimization**: Testing rules and fixtures that mock network retry backoff sleep (`time.sleep`), keeping automated test runs under 5 seconds.
+  - **Agent Security Rule**: Dedicated `.agents/rules/shift_left_security_standards.md` establishing safe file operations and pre-commit verification invariants.
+

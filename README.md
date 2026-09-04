@@ -88,3 +88,23 @@ This repository follows the multi-project mono-branch standard on `dev`:
 - Work is committed directly on the `dev` branch.
 - Milestone checkpoints use subfolder-prefixed annotated tags: `custom_harness/checkpoint-YYYYMMDD-HHMM`.
 - To checkpoint progress: run the `checkpoint` command to update tracking files, create the tag, and push upstream (`git push origin dev --tags`).
+
+---
+
+## 📋 TODO & Roadmap
+
+### TODO: Shift-Left Security & Fast Quality Gates
+Prevent late-stage security and testing failures (e.g. CodeQL CWE-22 path traversal alerts and sluggish CI pipelines) by shifting detection directly into local developer and agent editing loops:
+
+1. **Shared Zero-Dependency Security Primitives (`security_utils.py`)**:
+   - Provide standard library `pathlib.Path`-based security utilities (`safe_join`, `sanitize_slug`, `validate_safe_path`) preventing CWE-22 (Path Traversal) and null-byte injection across Python projects.
+   - Maintain zero external runtime dependencies (`uv` / `pip` not required).
+2. **Turnkey Pre-Commit Security Hooks (`.pre-commit-config.yaml`)**:
+   - Package a pre-commit template incorporating:
+     - `bandit`: Fast Python AST security scanning (<1s) for common CWE vulnerabilities.
+     - `semgrep`: Local OWASP Top 10 and CodeQL parity scanning (~2s) to flag path traversal, command injection, and secret leakage before push.
+3. **Test Suite Optimization (Mocking Exponential Backoff Sleep)**:
+   - Provide standard mock fixtures for API/network retry loops (e.g., Gemini AI exponential backoff) to eliminate real `time.sleep` delays during test runs, reducing test execution times from 90+ seconds to <5 seconds.
+4. **Agent Security & Quality Rule (`.agents/rules/shift_left_security_standards.md`)**:
+   - Codify mandatory rules for agents: enforce canonical containment checks for dynamic path access, mandate fast mock-driven retry tests, and verify local linter passes prior to staging commits.
+
