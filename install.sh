@@ -163,11 +163,9 @@ if [ "$TARGET_MODE" == "global" ]; then
   mkdir -p "${GLOBAL_CONFIG_DIR}"
   touch "${AGENTS_FILE}"
 
-  # Clean up legacy Bug Reporting & Management Protocol block if present
-  if grep -q "Bug Reporting & Management Protocol" "${AGENTS_FILE}"; then
-    echo -e "  Migrating legacy bug rules in ${BLUE}AGENTS.md${NC} to plugin..."
-    # Replace full legacy file with clean modern standard
-    cat << 'EOF' > "${AGENTS_FILE}"
+  # Configure clean modern standard AGENTS.md
+  echo -e "  Configuring global rules in ${BLUE}AGENTS.md${NC}..."
+  cat << 'EOF' > "${AGENTS_FILE}"
 # Global Rules
 
 - **Direct File Editing & Anti-Scripting Mandate**:
@@ -178,29 +176,25 @@ if [ "$TARGET_MODE" == "global" ]; then
 - **Bug Workflow Scoping**:
   * When reporting or triaging issues (`/bug`, `/triage_bug`, `/bug_plan`), do not modify source code or attempt immediate fixes; only record metadata or investigate root causes. Execute fixes only when `/fix_bug` is explicitly invoked.
 
-- **checkpoint**: When requested with "checkpoint" (or when you say "checkpoint" or "Finish for the day" or "finish for the day"), update the README.md and Resume.md (compaction summary), track status, check for any untracked project source files/directories in the active workspace (confirming .gitignore is clean), stage and commit all relevant modified and untracked project files with a descriptive message, and push the branch to the remote repository to ensure complete machine portability.
-EOF
-  else
-    if ! grep -q "Direct File Editing & Anti-Scripting Mandate" "${AGENTS_FILE}"; then
-      echo -e "  Configuring direct file editing rule in ${BLUE}AGENTS.md${NC}..."
-      cat << 'EOF' >> "${AGENTS_FILE}"
+- **Two-Tier Architecture & Workspace Scoping Protocol**:
+  * **Repository Detection**: Always determine the Git repository root of the active workspace (`git rev-parse --show-toplevel`).
+  * **Standalone Repositories (Tier 2)** (`~/dev/apps/*`, `~/dev/toolkits/*`, `~/dev/demos/*`, `~/dev/team/*`):
+    - Independent repositories (`uk-bh-project-dash`, `uk-bh-cch-demos`, `uk-bh-code-agent-suite`, `uk-bh-csiro-demos`, `uk-bh-healthdirect-demos`, etc.) each have their own `origin` remote, root `README.md`, `Resume.md`, and default branch (typically `main` or active `feat/*`, `demo/*`, `arch/*`).
+    - **Active Branch Integrity**: Stay on the project's current active branch. **NEVER switch to `dev` or assume the branch is `dev`** unless the project specifically uses a `dev` branch.
+    - **Documentation Scoping**: When asked to update the project README or documentation, update the project's own root `README.md` describing that specific project. NEVER overwrite or describe a standalone project as "UK BH Experiments Monorepo".
+    - **Git Pushing**: Push strictly to the project repository's own `origin` remote on the current branch (`git push origin <branch>`). NEVER commit or push standalone project changes into `uk-bh-experiments`.
+  * **Monorepo Scratchpad (Tier 1)** (`~/dev/experiments/uk-bh-experiments`):
+    - Reserved strictly for rapid prototyping, spikes, and scratchpad experiments on branch `dev`.
+    - Project description is "Google Cloud CE Experiments & Scratchpad (`uk-bh-experiments`)".
+    - Uses subfolder-scoped checkpoint tags on `dev` (`<subfolder>/checkpoint-YYYYMMDD-HHMM`).
 
-- **Direct File Editing & Anti-Scripting Mandate**:
-  * **Exclusively Native Tools**: All file reading, searching, creating, editing, and notebook modifications MUST use native tools (`view_file`, `grep_search`, `list_dir`, `replace_file_content`, `write_to_file`, `notebook_edit`).
-  * **Strict Prohibitions**: NEVER use shell commands (`sed`, `awk`, `cat <<EOF`, `echo >`) or temporary Python/bash helper scripts to read, parse, or edit files.
-  * **Edit Recovery**: If `replace_file_content` fails on character matching, use `view_file` to re-read the exact line chunk and retry native replacement; do NOT fall back to terminal scripts.
+- **checkpoint**: When requested with "checkpoint" (or when you say "checkpoint" or "Finish for the day" or "finish for the day"):
+  1. Identify the current Git repository and active branch.
+  2. Update the local project root `README.md` and `Resume.md` (compaction summary), and track active status.
+  3. Check for any untracked project source files/directories in the active workspace (confirming `.gitignore` is clean).
+  4. Stage and commit all relevant modified and untracked project files with a descriptive message.
+  5. Push the current branch to its remote repository (`git push origin <branch>`).
 EOF
-    fi
-
-    if ! grep -q "Bug Workflow Scoping" "${AGENTS_FILE}"; then
-      echo -e "  Configuring bug workflow rule in ${BLUE}AGENTS.md${NC}..."
-      cat << 'EOF' >> "${AGENTS_FILE}"
-
-- **Bug Workflow Scoping**:
-  * When reporting or triaging issues (`/bug`, `/triage_bug`, `/bug_plan`), do not modify source code or attempt immediate fixes; only record metadata or investigate root causes. Execute fixes only when `/fix_bug` is explicitly invoked.
-EOF
-    fi
-  fi
 fi
 
 echo -e "${GREEN}Custom Harness installed successfully!${NC}"
