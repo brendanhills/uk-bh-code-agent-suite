@@ -29,8 +29,10 @@
 - **Workspace & Branch Protocol**:
   * **Repository Scope**: Operate strictly within the current workspace's Git repository (`git rev-parse --show-toplevel`). Staging, commits, and pushes target the repository's configured `origin` remote.
   * **Branch Workflow**: Work directly on the active branch (e.g., `main`, or dedicated branches like `feat/*`, `demo/*`, `arch/*`). Prefer branches over tags for customer demo snapshots and feature tracks to allow direct iteration without detached HEAD states.
+  * **Pristine Demo Protection**: Never modify or add experimental features to a verified customer stage demo branch without explicit user instruction; implement extensions in dedicated `feat/*` or `demo/*` branches.
   * **Documentation**: When updating `README.md` or `Resume.md`, describe the specific project and context of the active repository.
   * **Releases & Tags**: Use annotated Git tags (`vX.Y.Z`) for formal, immutable version releases.
+
 
 - **checkpoint**: When requested with "checkpoint" (or "Finish for the day" / "finish for the day"):
   1. Identify the current Git repository and active branch.

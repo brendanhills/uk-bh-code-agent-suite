@@ -22,6 +22,15 @@ In Google Cloudtop and corporate development environments, individual Git comman
   ```
 
 ## 4. Workspace & Branch Scoping Protocol
-- **Protocol**:
-  - Commit and push directly within the active workspace's Git repository (`git rev-parse --show-toplevel`).
-  - Push strictly to the repository's configured origin remote on the current active branch (`git push origin <current-branch>`).
+- **Repository Scope**:
+  - Always operate strictly within the active workspace's Git repository (`git rev-parse --show-toplevel`).
+  - Staging, commits, and pushes target the repository's configured `origin` remote on the current active branch (`git push origin <current-branch>`). Never push across different repositories.
+- **Branch Strategy (Monorepo vs Standalone)**:
+  - **Scratchpad Monorepo (`uk-bh-experiments`)**: Operates on `origin/dev` using subfolder-prefixed tags (`<subfolder>/checkpoint-...`).
+  - **Tier 2 Graduated Standalone Repositories**: Work directly on the repository's active branch (`main`, or dedicated branches like `feat/*`, `demo/*`).
+- **Customer Presentation & Demo Snapshots**:
+  - Store customer presentation snapshots on dedicated named branches (e.g. `snapshot-of-...` or `demo/...`), NOT detached Git tags. This enables immediate testing, branch switching, and live tweaks without detached `HEAD` traps.
+  - **Non-Interference Rule**: Never modify or add experimental features to a pristine verified stage demo branch without explicit instruction. New features (e.g. post-call modals, extra tools) must be implemented in a dedicated `feat/*` or `demo/*` branch.
+- **Release Versioning**:
+  - Annotated Git tags (`vX.Y.Z`) are strictly reserved for formal, immutable version releases.
+
