@@ -21,9 +21,7 @@ In Google Cloudtop and corporate development environments, individual Git comman
   (cd submodule_dir && git commit -a -m "...") && git add submodule_dir && git commit -m "..." && git push
   ```
 
-## 4. Two-Tier Workspace & Branch Scoping Protocol
-- **Constraint**: When operating inside a graduated Tier 2 standalone repository (`~/dev/apps/*`, `~/dev/toolkits/*`, `~/dev/demos/*`, `~/dev/team/*`), **NEVER switch to `dev` or push to `uk-bh-experiments`**.
+## 4. Workspace & Branch Scoping Protocol
 - **Protocol**:
-  - Always commit and push directly within the active repository's directory.
-  - Push strictly to the project's own origin remote on its current branch (`git push origin <current-branch>`).
-  - The single `dev` branch workflow applies ONLY when the active workspace is the Tier 1 monorepo (`~/dev/experiments/uk-bh-experiments`).
+  - Commit and push directly within the active workspace's Git repository (`git rev-parse --show-toplevel`).
+  - Push strictly to the repository's configured origin remote on the current active branch (`git push origin <current-branch>`).

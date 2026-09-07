@@ -26,26 +26,16 @@
     - **With Argument (`/fix_bug #1`)**: Look up the bug ID inside `.agents/bugs.json`. Formulate a clear design plan. The **first task in implementing the fix must be to develop an automated reproduction unit test** that fails specifically due to this bug. Verify only that targeted test fails, then write code modifications required to resolve the bug. Verify that the reproduction unit test (and existing tests) pass successfully, set `"date_resolved"` to current date, and update status to `"Fix Implemented"`.
     - **Without Argument (`/fix_bug`)**: Read `.agents/bugs.json`, identify all remaining open/unverified bugs (status not `"Fix Verified"`), sort chronologically by priority (`P0` -> `P1` -> `P2` -> `P3`), and present a recommended sequence of resolution.
 
-- **Two-Tier Architecture & Workspace Scoping Protocol**:
-  * **Repository Detection**: Always determine the Git repository root of the active workspace (`git rev-parse --show-toplevel`).
-  * **Standalone Repositories (Tier 2)** (`~/dev/apps/*`, `~/dev/toolkits/*`, `~/dev/demos/*`, `~/dev/team/*`):
-    - Independent repositories (`uk-bh-project-dash`, `uk-bh-cch-demos`, `uk-bh-code-agent-suite`, `uk-bh-csiro-demos`, `uk-bh-healthdirect-demos`, etc.) each have their own `origin` remote, root `README.md`, `Resume.md`, and default branch (typically `main` or active `feat/*`, `demo/*`, `arch/*`).
-    - **Active Branch Integrity**: Stay on the project's current active branch. **NEVER switch to `dev` or assume the branch is `dev`** unless the project specifically uses a `dev` branch.
-    - **Documentation Scoping**: When asked to update the project README or documentation, update the project's own root `README.md` describing that specific project. NEVER describe a standalone project as "UK BH Experiments Monorepo" or confuse it with the monorepo.
-    - **Git Pushing**: Push strictly to the project repository's own `origin` remote on the current branch (`git push origin <branch>`). NEVER commit or push standalone project changes into `uk-bh-experiments`.
-  * **Monorepo Scratchpad (Tier 1)** (`~/dev/experiments/uk-bh-experiments`):
-    - Reserved strictly for rapid prototyping, spikes, and scratchpad experiments on branch `dev`.
-    - Project description is "Google Cloud CE Experiments & Scratchpad (`uk-bh-experiments`)".
-    - Uses subfolder-scoped checkpoint tags on `dev` (`<subfolder>/checkpoint-YYYYMMDD-HHMM`).
+- **Workspace & Branch Protocol**:
+  * **Repository Scope**: Operate strictly within the current workspace's Git repository (`git rev-parse --show-toplevel`). Staging, commits, and pushes target the repository's configured `origin` remote.
+  * **Branch Workflow**: Work directly on the active branch (e.g., `main`, or dedicated branches like `feat/*`, `demo/*`, `arch/*`). Prefer branches over tags for customer demo snapshots and feature tracks to allow direct iteration without detached HEAD states.
+  * **Documentation**: When updating `README.md` or `Resume.md`, describe the specific project and context of the active repository.
+  * **Releases & Tags**: Use annotated Git tags (`vX.Y.Z`) for formal, immutable version releases.
 
-- **checkpoint**: When requested with "checkpoint" (or when you say "checkpoint" or "Finish for the day" or "finish for the day"):
+- **checkpoint**: When requested with "checkpoint" (or "Finish for the day" / "finish for the day"):
   1. Identify the current Git repository and active branch.
   2. Update the local project root `README.md` and `Resume.md` (compaction summary), and track active status.
   3. Check for any untracked project source files/directories in the active workspace (confirming `.gitignore` is clean).
   4. Stage and commit all relevant modified and untracked project files with a descriptive message.
-  5. Push the current branch to its remote repository (`git push origin <branch>`).
-
-- **Tagging Protocol**:
-  1. **Tier 2 Standalone Repositories**: Create annotated Git tags for milestones (`git tag -a "<tag_name>" -m "<descriptive message>"`), e.g. `v1.0`, `demo-canberra`, `checkpoint-YYYYMMDD-HHMM`. Push with `git push origin <branch> --tags`.
-  2. **Tier 1 Monorepo (`uk-bh-experiments`)**: Use subfolder-prefixed taxonomy on `dev`: `<subfolder>/<category>-<identifier>` (e.g. `<subfolder>/checkpoint-YYYYMMDD-HHMM`, `<subfolder>/bugfix-<id>`). Push with `git push origin dev --tags`.
+  5. Push the current branch directly to its remote repository (`git push origin <branch>`).
 
